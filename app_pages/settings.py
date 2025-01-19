@@ -1,9 +1,14 @@
 import flet as ft
 
 def view(page):
+    def update_setting(setting_name, value):
+        current_settings = page.client_storage.get("settings")
+        current_settings[setting_name] = value
+        page.client_storage.set("settings", current_settings)
+
     def change_theme(e):
         page.theme_mode = "dark" if e.control.value else "light"
-        page.client_storage.set("settings_theme", page.theme_mode)
+        update_setting("theme", page.theme_mode)
         page.update()
 
     general_section = [
@@ -11,14 +16,14 @@ def view(page):
         ft.Container(height=2),
         ft.Switch(value=True if page.theme_mode == "dark" else False, label="Use dark mode", on_change=change_theme),
         ft.Switch(value=False, label="Close after patching",
-                  on_change=lambda e: page.client_storage.set("settings_exitafter", e.control.value)),
+                  on_change=lambda e: update_setting("exit_after", e.control.value)),
     ]
 
     mc_section = [
         ft.Text("Minecraft Settings", size=24, weight=ft.FontWeight.BOLD),
         ft.Container(height=2),
         ft.Switch(value=False, label="Start game automatically after patching",
-                  on_change=lambda e: page.client_storage.set("settings_start", e.control.value)),
+                  on_change=lambda e: update_setting("start_game", e.control.value)),
     ]
     
     sections = [general_section, mc_section]

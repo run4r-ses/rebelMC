@@ -1,21 +1,23 @@
-__version__ = "0.1"
+__version__ = "0.2"
 import flet as ft
+import logging
 from app_pages import get_app_pages
-from game_patchers import patch_methods
+from methods import available_methods
 
 def main(page: ft.Page):
     # Initial configuration
-    page.client_storage.set("patch_methods", patch_methods)
-    if page.client_storage.get("patch_method") is None:
-        page.client_storage.set("patch_method", "auto_permanent")
-    page.theme_mode = page.client_storage.get("settings_theme")
-    if page.theme_mode is None:
-        page.theme_mode = "light"
-    page.theme = ft.Theme(color_scheme_seed="#d11b52")
+    page.patch_methods = available_methods
+    if page.client_storage.get("settings") is None:
+        page.client_storage.set("settings", {})
+    page.theme_mode = page.client_storage.get("settings").get("theme", "light")
+    page.theme = ft.Theme(color_scheme_seed="#ff1c6b")
     page.window.min_width = 800
     page.window.min_height = 450
     page.window.width = 1020
     page.window.height = 660
+    page.fonts = {
+        "Roboto Mono": "assets/RobotoMono.ttf",
+    }
 
     # Screen handler
     screen_list = get_app_pages(page)
