@@ -1,4 +1,5 @@
 from datetime import datetime
+
 class MethodLogger:
     def __init__(self, log_file_path, name=""):
         self.log_file_path = log_file_path

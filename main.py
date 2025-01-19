@@ -1,14 +1,15 @@
-__version__ = "0.2"
+__version__ = "0.3"
 import flet as ft
 import logging
 from app_pages import get_app_pages
+from app_pages.settings import default_settings
 from methods import available_methods
 
 def main(page: ft.Page):
     # Initial configuration
+    if not page.client_storage.get("settings") or not all(key in page.client_storage.get("settings") for key in default_settings.keys()):
+        page.client_storage.set("settings", default_settings)
     page.patch_methods = available_methods
-    if page.client_storage.get("settings") is None:
-        page.client_storage.set("settings", {})
     page.theme_mode = page.client_storage.get("settings").get("theme", "light")
     page.theme = ft.Theme(color_scheme_seed="#ff1c6b")
     page.window.min_width = 800

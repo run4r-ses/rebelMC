@@ -48,6 +48,7 @@ def view(page):
 
     def reset_page(e):
         go_back_button.visible = False
+        go_back_button.disabled = True
         patch_button.visible = True
         text_box.value = ""
         global log_thread_running
