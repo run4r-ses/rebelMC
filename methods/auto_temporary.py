@@ -1,10 +1,17 @@
 __METHOD_name__ = "In-memory Patching"
 __METHOD_icon__ = "AUTO_FIX_HIGH"
 __METHOD_description__ = "Automatically patches Store DLL from game, and injects it back. Most of the code is based off BEAMinject (now called BeaMC)."
-
-from .utils.log import MethodLogger
-from .utils import maxrm_mcpatch
+__METHOD_requires_admin__ = False
+if __name__ == "__main__":
+    from utils.log import MethodLogger
+    from utils.args import decode_args
+    from utils import maxrm_mcpatch
+else:
+    from .utils.log import MethodLogger
+    from .utils.args import decode_args
+    from .utils import maxrm_mcpatch
 import os
+import sys
 import json
 import subprocess
 import librosewater.module
@@ -16,8 +23,10 @@ def runcmd(args):
     except subprocess.CalledProcessError:
         pass
 
-def main(config, log_path):
+def main(args):
+    config, log_path = decode_args(args)
     logger = MethodLogger(log_path)
+
     logger.info(f"Starting patch (using MaxRM patches v{maxrm_mcpatch.__version__})")
 
     # Get game install
@@ -91,3 +100,6 @@ def main(config, log_path):
 
     logger.info("Patching complete")
     return 0
+
+if __name__ == "__main__":
+    main(sys.argv[1])

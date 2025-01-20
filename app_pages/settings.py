@@ -1,11 +1,17 @@
 import flet as ft
 
-default_settings = {
-    "theme": "light",
-    "exit_after": False,
-    "start_game": True,
-    "use_preview": False
-}
+def configure_default_settings(page):
+    default_settings = {
+        "theme": "light",
+        "exit_after": False,
+        "start_game": True,
+        "use_preview": False
+    }
+    if not page.client_storage.get("settings") or not all(key in page.client_storage.get("settings") for key in default_settings.keys()):
+        page.client_storage.set("settings", default_settings)
+    if not page.client_storage.get("patch_method"):
+        page.client_storage.set("patch_method", "auto_temporary")
+    page.theme_mode = page.client_storage.get("settings").get("theme", "light")
 
 def view(page):
     get_setting = lambda x: page.client_storage.get("settings").get(x)

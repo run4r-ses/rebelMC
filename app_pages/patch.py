@@ -30,9 +30,12 @@ def view(page):
         return log_filename
 
     def run_method(method_name, log_filename):
+        global log_thread_running
         method = page.patch_methods[method_name]
-        method["func"](page.client_storage.get("settings"), log_filename)
+        method["run_method"](page.client_storage.get("settings"), log_filename)
+        log_thread_running = False
         go_back_button.disabled = False
+        page.update()
 
     def start_patch(e):
         # Start logging
