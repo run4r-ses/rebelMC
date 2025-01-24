@@ -7,7 +7,7 @@ import shlex
 import subprocess
 
 def run_script(script_path, *args, admin=True):
-    command = ' '.join([script_path] + [shlex.quote(arg) for arg in args])
+    command = ' '.join([f'\\"{script_path}\\"'] + [shlex.quote(arg) for arg in args])
     pwsh_cmd = (
         f'powershell -command "& {{ '
         f'$process = Start-Process \'{sys.executable}\' -ArgumentList \'{command}\' -WindowStyle Hidden -PassThru -Wait'
