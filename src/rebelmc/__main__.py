@@ -1,13 +1,20 @@
-__version__ = "0.4"
+from . import __version__
+import argparse
 import flet as ft
-from app_pages import get_app_pages
-from app_pages.settings import configure_default_settings
-from methods import available_methods
+from pathlib import Path
+from .app_pages import get_app_pages
+from .app_pages.settings import configure_default_settings
+from .methods import available_methods
 
-def main(page: ft.Page):
+def app(page: ft.Page, args):
     # Initial configuration
     configure_default_settings(page)
     page.patch_methods = available_methods
+    if args.log_dir is not None:
+        page.log_dir = Path(args.log_dir)
+        page.log_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        page.log_dir = Path(".")
     page.theme = ft.Theme(color_scheme_seed="#ff1c6b")
     page.window.min_width = 800
     page.window.min_height = 450
@@ -59,4 +66,17 @@ def main(page: ft.Page):
 
     # Page content
     page.add(ft.Row([rail, ft.VerticalDivider(width=2), container], expand=True))
-ft.app(main)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-l", "--log_dir", 
+        type=str, 
+        default=None,
+        help="Directory to save log files to"
+    )
+    args = parser.parse_args()
+    ft.app(lambda page: app(page, args))
+
+if __name__ == "__main__":
+    main()

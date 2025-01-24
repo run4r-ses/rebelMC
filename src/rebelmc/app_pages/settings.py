@@ -1,8 +1,20 @@
+import winreg
 import flet as ft
+
+def get_windows_theme():
+    try:
+        regkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize")
+        value, regtype = winreg.QueryValueEx(regkey, "AppsUseLightTheme")
+        winreg.CloseKey(regkey)
+        if value == 0:
+            return "dark"
+    except Exception:
+        pass
+    return "light"
 
 def configure_default_settings(page):
     default_settings = {
-        "theme": "light",
+        "theme": get_windows_theme(),
         "exit_after": False,
         "start_game": True,
         "use_preview": False

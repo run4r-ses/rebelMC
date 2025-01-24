@@ -2,6 +2,8 @@ __METHOD_name__ = "In-memory Patching"
 __METHOD_icon__ = "AUTO_FIX_HIGH"
 __METHOD_description__ = "Automatically patches Store DLL from game, and injects it back. Most of the code is based off BEAMinject (now called BeaMC)."
 __METHOD_requires_admin__ = False
+__METHOD_actions__ = ["patch"]
+
 if __name__ == "__main__":
     from utils.log import MethodLogger
     from utils.args import decode_args
@@ -23,7 +25,7 @@ def runcmd(args):
     except subprocess.CalledProcessError:
         pass
 
-def main(args):
+def __METHOD_patch__(args):
     config, log_path = decode_args(args)
     logger = MethodLogger(log_path)
 
@@ -101,5 +103,10 @@ def main(args):
     logger.info("Patching complete")
     return 0
 
+
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run_type = sys.argv[1]
+    method = lambda x: None
+    if run_type == "patch":
+        method = __METHOD_patch__
+    sys.exit(method(sys.argv[2]))

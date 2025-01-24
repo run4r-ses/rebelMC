@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rebelmc"
+description = "A multi-functional Minecraft UWP unlocker written in Python"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+keywords = ["minecraft", "tool", "unlocker"]
+authors = [{ name = "run4r.ses" }]
+maintainers = [{ name = "run4r.ses" }]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Topic :: Utilities",
+  "License :: OSI Approved :: The Unlicense (Unlicense)",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = [
+    "librosewater @ git+https://github.com/run4r-ses/librosewater",
+    "flet"
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/run4r-ses/rebelMC"
+Documentation = "https://github.com/run4r-ses/rebelMC"
+Repository = "https://github.com/run4r-ses/rebelMC.git"
+Issues = "https://github.com/run4r-ses/rebelMC/issues"
+
+[project.scripts]
+rebelMC = "rebelmc.__main__:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "rebelmc.__version__"}

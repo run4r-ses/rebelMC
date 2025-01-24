@@ -19,7 +19,7 @@ def view(page):
         header.content.controls = gen_header(methods[e.control.value])
         page.update()
 
-    
+
     default_value = page.client_storage.get("patch_method")
     header = ft.Container(
         padding=ft.padding.symmetric(horizontal=100, vertical=30),
