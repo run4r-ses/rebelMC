@@ -1,4 +1,4 @@
-__version__ = "0.5rc1"
+__version__ = "0.5rc2"
 import argparse
 import flet as ft
 from pathlib import Path

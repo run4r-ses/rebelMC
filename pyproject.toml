@@ -41,3 +41,6 @@ rebelMC = "rebelmc.__main__:main"
 
 [tool.setuptools.dynamic]
 version = {attr = "rebelmc.__main__.__version__"}
+
+[tool.setuptools.package-data]
+rebelmc = ["assets/*"]
