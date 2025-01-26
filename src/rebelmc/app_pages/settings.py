@@ -34,6 +34,7 @@ def view(page):
 
     def change_theme(e):
         page.theme_mode = "dark" if e.control.value else "light"
+        page.update_logo()
         update_setting("theme", page.theme_mode)
         page.update()
 
@@ -50,7 +51,7 @@ def view(page):
         ft.Container(height=2),
         ft.Switch(value=get_setting("start_game"), label="Start game automatically",
                   on_change=lambda e: update_setting("start_game", e.control.value)),
-        ft.Switch(value=get_setting("use_preview"), label="Patch Minecraft Preview instead of Minecraft release (only applicable to non-system methods)",
+        ft.Switch(value=get_setting("use_preview"), label="Patch Minecraft Preview (only applicable to non-system methods)",
                   on_change=lambda e: update_setting("use_preview", e.control.value)),
     ]
     

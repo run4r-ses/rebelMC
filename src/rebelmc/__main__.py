@@ -31,19 +31,30 @@ def app(page: ft.Page, args):
         container.content = screen_list[e.control.selected_index]
         page.update()
     
+    # App logo
+    base_path = Path(__file__).resolve().parent
+    def update_logo():
+        page.logo.src = str(base_path / f"assets/logo_{page.theme_mode}.png")
+    page.update_logo = update_logo
+    page.logo = ft.Image(
+        width=50,
+        height=50,
+    )
+    page.update_logo()
+
     # Navrail
     rail = ft.NavigationRail(
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
         min_width=100,
         min_extended_width=400,
-        leading=ft.Text("rebelMC", size=24, weight=ft.FontWeight.BOLD),
+        leading=ft.Container(content=page.logo, padding=20),
         trailing=ft.Row([
             ft.Icon(ft.Icons.INFO_OUTLINE, size=16, weight=ft.FontWeight.W_200, color=ft.Colors.GREY),
             ft.VerticalDivider(width=2),
             ft.Text("version " + __version__, size=12, color=ft.Colors.GREY)
         ], spacing=1, alignment=ft.MainAxisAlignment.CENTER),
-        group_alignment=-0.3,
+        group_alignment=-(1/3),
         destinations=[
             ft.NavigationRailDestination(
                 icon=ft.Icons.BUILD_OUTLINED,
