@@ -10,13 +10,32 @@ def run_script(script_path, *args, admin=False):
     command = ' '.join([f'\\"{script_path}\\"'] + [shlex.quote(arg) for arg in args])
     pwsh_cmd = (
         f'powershell -command "& {{ '
-        f'$process = Start-Process \'{sys.executable}\' -ArgumentList \'{command}\' -WindowStyle Hidden -PassThru -Wait'
-        f'{" -Verb runas" if admin else ""}'
-        f'; exit $process.ExitCode; }}"'
+        f'$process = Start-Process \'{sys.executable}\' -ArgumentList \'{command}\' -WindowStyle Hidden -PassThru'
+        f'{" -Verb runas" if admin else ""}; '
+        f'[Console]::WriteLine($process.Id); $process.WaitForExit(); exit $process.ExitCode; }}"'
     )
-    proc = subprocess.run(pwsh_cmd, shell=True)
-    return proc.returncode
- 
+    proc = subprocess.Popen(
+        pwsh_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
+
+    child_pid = None
+    for line in proc.stdout:
+        line = line.strip()
+        if line.isdigit():
+            child_pid = int(line)
+            break
+
+    def terminate():
+        if child_pid:
+            subprocess.run(
+                f"taskkill /PID {child_pid} /F",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True
+            )
+
+    return proc, terminate
+
 def create_run_method(method_file, needs_admin):
     def run_method(action, config, log_path):
         return run_script(method_file, action, encode_args(config, log_path), admin=needs_admin)

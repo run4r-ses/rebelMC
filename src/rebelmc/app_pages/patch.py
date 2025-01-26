@@ -6,13 +6,10 @@ from datetime import datetime
 
 def view(page):
     # Logging handlers
-    log_thread_running = False
-
     def read_log_thread(log_file_name):
-        global log_thread_running
         last_modified = 0
         with open(log_file_name, "r") as file:
-            while log_thread_running:
+            while page.patch_process is not None:
                 current_modified = os.path.getmtime(log_file_name)
                 if current_modified != last_modified:
                     file.seek(0)
@@ -31,22 +28,21 @@ def view(page):
 
     # Method handler
     def run_method(action, method_name, log_filename):
-        global log_thread_running
         method = page.patch_methods[method_name]
-        return_code = method["run_method"](action, page.client_storage.get("settings"), log_filename)
-        if return_code == 0:
+        page.patch_process = method["run_method"](action, page.client_storage.get("settings"), log_filename)
+        page.patch_process[0].wait()
+        if page.patch_process[0].returncode == 0:
             status_title.value = "Success"
-        elif return_code == 1:
+        elif page.patch_process[0].returncode == 1:
             status_title.value = "Failure"
         else:
             status_title.value = "Finished"
-        log_thread_running = False
+        page.patch_process = None
         go_back_button.disabled = False
         page.update()
         status_title.value = "Executing..."
         go_back_button.disabled = True
         text_box.value = ""
-        log_thread_running = False
 
 
     # Start & Home button handler
@@ -55,10 +51,10 @@ def view(page):
         log_file = create_log_file(method_name)
         current_container.content = action_content
         page.update()
-        global log_thread_running
-        log_thread_running = True
-        threading.Thread(target=read_log_thread, args=(log_file,), daemon=True).start()
+        page.patch_process = "DUMMY"
         threading.Thread(target=run_method, args=(action, method_name, log_file), daemon=True).start()
+        threading.Thread(target=read_log_thread, args=(log_file,), daemon=True).start()
+
 
     def homepage(e):
         generate_page_content()
@@ -131,7 +127,7 @@ def view(page):
             if current_patch_method != last_patch_method:
                 last_patch_method = current_patch_method
                 generate_page_content()
-                if not log_thread_running:
+                if page.patch_process is None:
                     current_container.content = page_content
                     page.update()
             time.sleep(0.1)

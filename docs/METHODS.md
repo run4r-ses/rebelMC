@@ -25,7 +25,7 @@ Each method has a "run method" to allow interacting with the method. A run metho
 - Takes in **action**, **configuration *(aka. app settings)***, and **log file path**
 - Pickles config and log path & encodes as base64 to pass through command line *(using `.utils.args`)*
 - Creates a `Start-Process` instance where the method is launched as a seperate Python instance
-- Returns exit code of method after it is finished
+- Returns process instance and a termination function
 
 Run methods are the *only way* that a method supports interaction. Any other usage of methods are unsupported.
 

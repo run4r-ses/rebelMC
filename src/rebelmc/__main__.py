@@ -1,4 +1,4 @@
-from . import __version__
+__version__ = "0.5rc1"
 import argparse
 import flet as ft
 from pathlib import Path
@@ -8,6 +8,7 @@ from .methods import get_available_methods
 
 def app(page: ft.Page, args):
     # Initial configuration
+    base_path = Path(__file__).resolve().parent
     configure_default_settings(page)
     page.patch_methods = get_available_methods()
     if args.log_dir is not None:
@@ -21,7 +22,7 @@ def app(page: ft.Page, args):
     page.window.width = 1020
     page.window.height = 660
     page.fonts = {
-        "Roboto Mono": "assets/RobotoMono.ttf",
+        "Roboto Mono": str(base_path / "assets" / "RobotoMono.ttf"),
     }
 
     # Screen handler
@@ -32,7 +33,6 @@ def app(page: ft.Page, args):
         page.update()
     
     # App logo
-    base_path = Path(__file__).resolve().parent
     def update_logo():
         page.logo.src = str(base_path / f"assets/logo_{page.theme_mode}.png")
     page.update_logo = update_logo
@@ -73,6 +73,40 @@ def app(page: ft.Page, args):
             ),
         ],
         on_change=set_screen
+    )
+
+    # Exit patching check
+    def handle_window_event(e):
+        if e.data == "close":
+            if page.patch_process is not None:
+                page.open(confirm_dialog)
+            else:
+                page.window.visible = False
+                page.window.destroy()
+    page.patch_process = None
+    page.window.prevent_close = True
+    page.window.on_event = handle_window_event
+
+    def terminate_proc(e):
+        if page.patch_process is not None:
+            page.patch_process[1]()
+        page.window.visible = False
+        page.window.destroy()
+    def close_dialog(e):
+        page.close(confirm_dialog)
+    confirm_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Patch is still running"),
+        content=ft.Text((
+            "Exiting now will kill the process, "
+            "which can lead to unexpected behavior.\n"
+            "Are you sure you want to exit?"
+        )),
+        actions=[
+            ft.ElevatedButton("Yes", on_click=terminate_proc),
+            ft.OutlinedButton("No", on_click=close_dialog),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
     )
 
     # Page content

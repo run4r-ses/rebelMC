@@ -40,4 +40,4 @@ Issues = "https://github.com/run4r-ses/rebelMC/issues"
 rebelMC = "rebelmc.__main__:main"
 
 [tool.setuptools.dynamic]
-version = {attr = "rebelmc.__version__"}
+version = {attr = "rebelmc.__main__.__version__"}
