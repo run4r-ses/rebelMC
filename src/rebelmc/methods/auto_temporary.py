@@ -4,14 +4,9 @@ __METHOD_description__ = "Automatically patches Store DLL from game, and injects
 __METHOD_requires_admin__ = False
 __METHOD_actions__ = ["patch"]
 
-if __name__ == "__main__":
-    from utils.log import MethodLogger
-    from utils.args import decode_args
-    from utils import maxrm_mcpatch
-else:
-    from .utils.log import MethodLogger
-    from .utils.args import decode_args
-    from .utils import maxrm_mcpatch
+from utils.log import MethodLogger
+from utils.args import decode_args
+from utils import maxrm_mcpatch
 import os
 import sys
 import json

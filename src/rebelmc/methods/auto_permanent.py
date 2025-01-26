@@ -4,12 +4,8 @@ __METHOD_description__ = "Automatically patches Store DLL from file, and writes 
 __METHOD_requires_admin__ = True
 __METHOD_actions__ = ["patch", "uninstall"]
 
-if __name__ == "__main__":
-    from utils.log import MethodLogger
-    from utils.args import decode_args
-else:
-    from .utils.log import MethodLogger
-    from .utils.args import decode_args
+from utils.log import MethodLogger
+from utils.args import decode_args
 import time
 import sys
 

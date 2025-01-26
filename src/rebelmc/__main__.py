@@ -4,12 +4,12 @@ import flet as ft
 from pathlib import Path
 from .app_pages import get_app_pages
 from .app_pages.settings import configure_default_settings
-from .methods import available_methods
+from .methods import get_available_methods
 
 def app(page: ft.Page, args):
     # Initial configuration
     configure_default_settings(page)
-    page.patch_methods = available_methods
+    page.patch_methods = get_available_methods()
     if args.log_dir is not None:
         page.log_dir = Path(args.log_dir)
         page.log_dir.mkdir(parents=True, exist_ok=True)

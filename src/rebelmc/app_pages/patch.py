@@ -33,7 +33,7 @@ def view(page):
     def run_method(action, method_name, log_filename):
         global log_thread_running
         method = page.patch_methods[method_name]
-        return_code = method["method"](action, page.client_storage.get("settings"), log_filename)
+        return_code = method["run_method"](action, page.client_storage.get("settings"), log_filename)
         if return_code == 0:
             status_title.value = "Success"
         elif return_code == 1:
@@ -92,6 +92,7 @@ def view(page):
             horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     generate_page_content()
+
 
     # Log page
     status_title = ft.Text(
