@@ -1,4 +1,5 @@
-__version__ = "0.5rc2"
+__version__ = "0.5.0"
+__codename__ = "claw"
 import argparse
 import flet as ft
 from pathlib import Path
@@ -49,11 +50,11 @@ def app(page: ft.Page, args):
         min_width=100,
         min_extended_width=400,
         leading=ft.Container(content=page.logo, padding=20),
-        trailing=ft.Row([
+        trailing=ft.Column([
             ft.Icon(ft.Icons.INFO_OUTLINE, size=16, weight=ft.FontWeight.W_200, color=ft.Colors.GREY),
-            ft.VerticalDivider(width=2),
-            ft.Text("version " + __version__, size=12, color=ft.Colors.GREY)
-        ], spacing=1, alignment=ft.MainAxisAlignment.CENTER),
+            ft.Divider(height=2),
+            ft.Text(f"rebelMC {__codename__}\nversion {__version__}", size=12, color=ft.Colors.GREY),
+        ], spacing=1, alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.MainAxisAlignment.CENTER),
         group_alignment=-(1/3),
         destinations=[
             ft.NavigationRailDestination(

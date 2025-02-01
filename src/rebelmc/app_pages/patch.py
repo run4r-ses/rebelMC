@@ -19,6 +19,7 @@ def view(page):
                     page.update()
                 time.sleep(0.1)
 
+
     def create_log_file(method_name):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         log_file = page.log_dir / f"{timestamp}_{method_name}.log"
